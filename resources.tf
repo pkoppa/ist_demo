@@ -1,3 +1,34 @@
+data "aws_ami" "amazon_linux" {
+  owners      = ["amazon"]
+  most_recent = true
+
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
+  }
+}
+
+output "amazon_linux_ami_id" {
+  value = data.aws_ami.amazon_linux.id
+}
+
+resource "aws_instance" "example-instance-cli" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "example-instance-cli"
+  }
+
+
+  provisioner "local-exec" {
+    command    = "echo ${aws_instance.example-instance-cli.public_ip} >> inventory"
+    on_failure = fail
+  }
+}
+
+
 data "vsphere_datacenter" "dc" {
   name = var.dc
 }
@@ -31,7 +62,7 @@ data "vsphere_resource_pool" "pool" {
 
 
 resource "vsphere_virtual_machine" "vmFromRemoteOvf" {
-  name                       = var.vsphere_vm_name
+  name                       = "example-vm-cli"
   resource_pool_id           = data.vsphere_resource_pool.pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   host_system_id             = data.vsphere_host.host.id

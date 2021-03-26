@@ -1,3 +1,15 @@
+variable "access_key" {
+  description = "AWS Access Key"
+}
+
+variable "secret_key" {
+  description = "AWS Secret Key"
+}
+
+
+
+
+
 variable "vsphere_username" {
   description = "vSphere username."
   type        = string
@@ -44,7 +56,7 @@ variable "wait_for_guest_net_timeout" {
 variable "remote_ovf_url" {
   description = "HTTP(S) URL of the OVA/OVF."
   type        = string
-  default     = "http://173.36.220.19/MicroCore-Linux.ova"
+  default     = null
 }
 
 variable "disk_provisioning" {
