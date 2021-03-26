@@ -44,7 +44,7 @@ variable "wait_for_guest_net_timeout" {
 variable "remote_ovf_url" {
   description = "HTTP(S) URL of the OVA/OVF."
   type        = string
-  default     = null
+  default     = "http://173.36.220.19/MicroCore-Linux.ova"
 }
 
 variable "disk_provisioning" {
