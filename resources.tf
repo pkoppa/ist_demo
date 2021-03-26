@@ -31,7 +31,7 @@ data "vsphere_resource_pool" "pool" {
 
 
 resource "vsphere_virtual_machine" "vmFromRemoteOvf" {
-  name                       = "example-vm-cli"
+  name                       = var.vsphere_vm_name
   resource_pool_id           = data.vsphere_resource_pool.pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   host_system_id             = data.vsphere_host.host.id
