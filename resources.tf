@@ -1,34 +1,3 @@
-data "aws_ami" "amazon_linux" {
-  owners      = ["amazon"]
-  most_recent = true
-
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
-  }
-}
-
-output "amazon_linux_ami_id" {
-  value = data.aws_ami.amazon_linux.id
-}
-
-resource "aws_instance" "example-instance-cli" {
-  ami           = data.aws_ami.amazon_linux.id
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "example-instance-cli"
-  }
-
-
-  provisioner "local-exec" {
-    command    = "echo ${aws_instance.example-instance-cli.public_ip} >> inventory"
-    on_failure = fail
-  }
-}
-
-
 data "vsphere_datacenter" "dc" {
   name = var.dc
 }
