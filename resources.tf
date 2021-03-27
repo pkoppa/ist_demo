@@ -1,32 +1,63 @@
-data "aws_ami" "amazon_linux" {
-  owners      = ["amazon"]
-  most_recent = true
+resource "kubernetes_deployment" "example" {
+  metadata {
+    name = "terraform-example"
+    labels = {
+      test = "MyExampleApp"
+    }
+  }
 
+  spec {
+    replicas = 3
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
+    selector {
+      match_labels = {
+        test = "MyExampleApp"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          test = "MyExampleApp"
+        }
+      }
+
+      spec {
+        container {
+          image = "nginx:1.7.8"
+          name  = "example"
+
+          resources {
+            limits = {
+              cpu    = "0.5"
+              memory = "512Mi"
+            }
+            requests = {
+              cpu    = "250m"
+              memory = "50Mi"
+            }
+          }
+
+          liveness_probe {
+            http_get {
+              path = "/nginx_status"
+              port = 80
+
+              http_header {
+                name  = "X-Custom-Header"
+                value = "Awesome"
+              }
+            }
+
+            initial_delay_seconds = 3
+            period_seconds        = 3
+          }
+        }
+      }
+    }
   }
 }
 
-output "amazon_linux_ami_id" {
-  value = data.aws_ami.amazon_linux.id
-}
-
-resource "aws_instance" "example-instance-cli" {
-  ami           = data.aws_ami.amazon_linux.id
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "example-instance-cli"
-  }
-
-
-  provisioner "local-exec" {
-    command    = "echo ${aws_instance.example-instance-cli.public_ip} >> inventory"
-    on_failure = fail
-  }
-}
 
 
 data "vsphere_datacenter" "dc" {

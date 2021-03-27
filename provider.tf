@@ -1,12 +1,12 @@
 terraform {
   required_providers {
-    
-kubernetes = {
+
+    kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.0.3"
     }
 
-vsphere = {
+    vsphere = {
       source  = "hashicorp/vsphere"
       version = ">= 1.24.3"
     }
