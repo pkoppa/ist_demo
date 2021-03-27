@@ -26,32 +26,6 @@ resource "kubernetes_deployment" "example" {
         container {
           image = "nginx:1.7.8"
           name  = "example"
-
-          resources {
-            limits = {
-              cpu    = "0.5"
-              memory = "512Mi"
-            }
-            requests = {
-              cpu    = "250m"
-              memory = "50Mi"
-            }
-          }
-
-          liveness_probe {
-            http_get {
-              path = "/nginx_status"
-              port = 80
-
-              http_header {
-                name  = "X-Custom-Header"
-                value = "Awesome"
-              }
-            }
-
-            initial_delay_seconds = 3
-            period_seconds        = 3
-          }
         }
       }
     }
@@ -93,7 +67,7 @@ data "vsphere_resource_pool" "pool" {
 
 
 resource "vsphere_virtual_machine" "vmFromRemoteOvf" {
-  name                       = "example-vm-cli"
+  name                       = "terraform-example-vm"
   resource_pool_id           = data.vsphere_resource_pool.pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   host_system_id             = data.vsphere_host.host.id
